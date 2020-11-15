@@ -1,4 +1,4 @@
-// const fs = require('fs');
+const fs = require('fs');
 const http = require('http');
 const url = require('url');
 
@@ -24,30 +24,78 @@ const url = require('url');
 // });
 // console.log('Reading...');
 
+// FILES
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+const replaceTemplate = (temp, product) => {
+    let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName);
+    output = output.replace(/{%IMAGE%}/g, product.image);
+    output = output.replace(/{%QUANTITY%}/g, product.quantity);
+    output = output.replace(/{%PRICE%}/g, product.price);
+    output = output.replace(/{%FROM%}/g, product.from);
+    output = output.replace(/{%PRODUCTNUTRIENTSNAMEs%}/g, product.nutrients);
+    output = output.replace(/{%DESCRIPTION%}/g, product.description);
+    output = output.replace(/{%ID%}/g, product.id);
+
+    if(!product.organic){
+        output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
+    }
+    
+    return output;
+};
+
+const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
+const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
+const tempView = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
+
+const productData = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8'));
 
 const server = http.createServer((req, res) => {
-    const pathName = req.url;
-
-    switch(pathName){
+    let { query, pathname } = url.parse(req.url, true);
+    query = JSON.parse(JSON.stringify(query));
+    switch(pathname){
+        // Overview page
         case '/overview':
-            res.end('Overview');
-            break;
-        case '/product':
-            res.end('Product');
-            break;
         case '/':
-            res.end('Overview');
+            res.writeHead(200, {
+                'Content-type': 'html'
+            });
+
+            const cardsHtml = productData.map(element => replaceTemplate(tempView, element)).join('');
+            const overviewOutput = tempOverview.replace('{%PRODUCT_CARDs%}', cardsHtml);
+
+            res.end(overviewOutput);
             break;
+
+        // Product page
+        case '/product':
+            res.writeHead(200, {
+                'Content-type': 'text/html'
+            });
+            const product = productData[query.id];
+            const productOutput = replaceTemplate(tempProduct, product);
+            res.end(productOutput);
+            break;
+
+        // API
+        case '/api':
+            res.writeHead(200, {
+                'Content-type': 'application/json'
+            });
+            res.end(JSON.stringify(productData));
+            break;
+
+        // NOT FOUND
         default:
             res.writeHead(404, {
                 'Content-type': 'text/html'
             });
-            res.end('<h1>Nice try</h1>');
+            res.end('<h1><strong>Nice try</strong></h1>');
     }
-    res.end("Hello from the server");
 });
 
 server.listen(3000, '127.0.0.1', () => {
     console.log("Listening to request on port 3000");
 });
+
+// SERVER
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
