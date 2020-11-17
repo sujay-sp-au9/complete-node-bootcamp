@@ -9,40 +9,33 @@ class Sales extends EventEmitter {
 
 const myEmitter = new Sales();
 
-console.log("Waiting...");
-
 myEmitter.on("newSale", () => {
-  console.log("New Sale bitch");
+  console.log("There was a new sale");
 });
 
 myEmitter.on("newSale", () => {
-  console.log("YES!!!");
+  console.log("Yaay!");
 });
 
 myEmitter.on("newSale", (stock) => {
-  console.log(`There are now ${stock} items left in stock`);
+  console.log(`Remaining stock: ${stock}`);
 });
 
-myEmitter.emit("newSale", 9);
+myEmitter.emit("newSale", 90);
 
-///////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 const server = http.createServer();
 
 server.on("request", (req, res) => {
-  console.log(req.url);
   console.log("Request received");
   res.end("Request received");
 });
 
 server.on("request", (req, res) => {
-  console.log("Another request received");
+  console.log("Another");
 });
 
-server.on("close", () => {
-  console.log("Server closed");
-});
-
-server.listen(8000, "127.0.0.1", () => {
-  console.log("Waiting for requests");
+server.listen(3000, "127.0.0.1", () => {
+  console.log("Waiting for request");
 });
