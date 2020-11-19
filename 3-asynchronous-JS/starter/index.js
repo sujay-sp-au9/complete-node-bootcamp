@@ -50,9 +50,9 @@ const getDogPic = async () => {
     );
     const all = await Promise.all([res1Pro, res2Pro, res3Pro]);
     const imgs = all.map((elem) => elem.body.message);
-    const URL = imgs.join("\n");
-    console.log(URL);
-    const writeRes = await writeFilePro("dog-img.txt", URL);
+    const URLs = imgs.join("\n");
+    console.log(URLs);
+    const writeRes = await writeFilePro("dog-img.txt", URLs);
     console.log(writeRes);
   } catch (err) {
     console.log(err.message);
