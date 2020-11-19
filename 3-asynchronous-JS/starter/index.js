@@ -49,8 +49,8 @@ const getDogPic = async () => {
       `https://dog.ceo/api/breed/${data}/images/random`
     );
     const all = await Promise.all([res1Pro, res2Pro, res3Pro]);
-    const imgs = all.map((elem) => elem.body.message);
-    const URLs = imgs.join("\n");
+    all = all.map((elem) => elem.body.message);
+    const URLs = all.join("\n");
     console.log(URLs);
     const writeRes = await writeFilePro("dog-img.txt", URLs);
     console.log(writeRes);
