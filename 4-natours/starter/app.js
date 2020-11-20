@@ -19,7 +19,7 @@ const tours = JSON.parse(
 
 app.get('/api/v1/tours/:id?', (req, res) => {
   const id = req.params.id;
-  if (req.params.hasOwnProperty('id') && id) {
+  if (id) {
     if (id >= tours.length) {
       res.status(404).json({
         status: 'fail',
