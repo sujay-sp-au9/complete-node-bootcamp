@@ -5,23 +5,45 @@ exports.getAllTours = async (req, res) => {
     const queryObj = { ...req.query };
     const excludeField = ['page', 'sort', 'limit', 'fields'];
     excludeField.forEach((element) => delete queryObj[element]);
+    // Filtering
 
     let queryStr = JSON.stringify(queryObj);
     queryStr = JSON.parse(
       queryStr.replace(/\bgte|gt|lt|lte\b/, (match) => `$${match}`)
     );
-
     const query = Tour.find(queryStr);
+
+    // Sorting
+
     if (req.query.sort) {
       const sortBy = req.query.sort.split(',').join(' ');
       query.sort(sortBy);
+    } else {
+      query.sort('-createdAt');
     }
+
+    //Limiting field
+
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query.select(fields);
+    } else {
+      query.select('-__v');
+    }
+
+    // Pagination
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+    const skip = limit * (page - 1);
+    query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numTours = await Tour.countDocuments();
+      if (skip >= numTours) throw new Error('This page does not exist');
+    }
+
     const tours = await query;
-    // const query = Tour.find()
-    //   .where('duration')
-    //   .equals(5)
-    //   .where('difficulty')
-    //   .equals('easy');
+
     res.status(200).json({
       status: 'success',
       results: tours.length,
