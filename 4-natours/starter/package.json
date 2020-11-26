@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start:dev": "node server.js",
-    "start:prod": "NODE_ENV=production node server.js"
+    "start:prod": "NODE_ENV=production node server.js",
+    "debug": "ndb server.js"
   },
   "author": "sujay",
   "license": "ISC",
@@ -14,6 +15,7 @@
     "express": "^4.17.1",
     "mongoose": "^5.10.15",
     "morgan": "^1.10.0",
+    "ndb": "^1.1.5",
     "slugify": "^1.4.6"
   },
   "devDependencies": {
