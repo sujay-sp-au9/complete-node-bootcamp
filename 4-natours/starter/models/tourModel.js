@@ -99,11 +99,6 @@ toursSchema.pre('save', function (next) {
   next();
 });
 
-toursSchema.pre('save', function (next) {
-  console.log('Will save document..');
-  next();
-});
-
 // toursSchema.post('save', function (doc, next) {
 //   console.log(doc);
 //   next();

@@ -16,7 +16,11 @@ const sendErrorProd = (err, res) => {
     });
   } else {
     // Programming or other unknown error: dont leak error details
+
+    // 1 log error
     console.error('ERROR: ', err);
+
+    // 2 send generic response
     res.status(500).json({
       status: 'error',
       message: 'Something went wrong',
@@ -30,7 +34,15 @@ module.exports = (err, req, res, next) => {
   err.message = err.message || 'none';
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
-  } else if (process.env.NODE_ENV === 'development') {
+  } else if (process.env.NODE_ENV === 'production') {
+    if (
+      err.name === 'CastError' ||
+      err.code === 11000 ||
+      err.name === 'ValidationError'
+    ) {
+      err.isOperational = true;
+      err.statusCode = 400;
+    }
     sendErrorProd(err, res);
   }
   next();
