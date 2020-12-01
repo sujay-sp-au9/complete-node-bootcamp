@@ -43,6 +43,10 @@ module.exports = (err, req, res, next) => {
       err.isOperational = true;
       err.statusCode = 400;
     }
+    if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+      err.isOperational = true;
+      err.statusCode = 401;
+    }
     sendErrorProd(err, res);
   }
   next();
