@@ -128,3 +128,16 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   const token = signToken(user._id);
   loginSuccess(res, token);
 });
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id).select('password');
+  if (!user) return next(new AppError("You're not logged in", 403));
+  if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
+    return next(new AppError('Incorrect password', 403));
+  }
+  user.password = req.body.newPassword;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  const token = signToken(user._id);
+  loginSuccess(res, token);
+});
