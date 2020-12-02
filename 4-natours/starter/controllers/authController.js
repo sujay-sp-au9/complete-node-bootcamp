@@ -12,6 +12,13 @@ const signToken = (id) => {
   });
 };
 
+const loginSuccess = (res, token) => {
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
+};
+
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
@@ -40,10 +47,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password)))
     return next(new AppError('User not found', 401));
   const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  loginSuccess(res, token);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -118,13 +122,9 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     return next(new AppError('Enter password', 400));
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
-  user.passwordChangedAt = Date.now();
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
   await user.save();
   const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  loginSuccess(res, token);
 });
