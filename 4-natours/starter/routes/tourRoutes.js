@@ -16,7 +16,11 @@ router
   .route('/:id')
   .get(tourController.getTour)
   .patch(tourController.updateTour)
-  .delete(tourController.deleteTour);
+  .delete(
+    authController.protect,
+    authController.restrictTo('admin', 'leadguide'),
+    tourController.deleteTour
+  );
 
 router
   .route('/')
