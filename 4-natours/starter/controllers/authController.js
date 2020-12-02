@@ -99,7 +99,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     status: 'success',
     message: 'Token sent to email',
   });
-  next();
 });
 
 exports.resetPassword = (req, res, next) => {};
