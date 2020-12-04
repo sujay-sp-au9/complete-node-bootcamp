@@ -33,7 +33,18 @@ app.use(mongoSanitize());
 // Data sanitization against XSS
 app.use(xssClean());
 // Prevent parameter pollution
-app.use(hpp({ whitelist: ['duration'] }));
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingsQuantity',
+      'maxGroupSize',
+      'difficulty',
+      'ratingsAverage',
+      'price',
+    ],
+  })
+);
 
 /////////////// ROUTES
 
