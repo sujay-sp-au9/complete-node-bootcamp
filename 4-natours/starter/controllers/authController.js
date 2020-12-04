@@ -6,6 +6,13 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const sendEmail = require('../utils/email');
 
+const cookieOptions = {
+  expires: new Date(
+    Date.now + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+  ),
+  httpOnly: true,
+};
+
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -15,7 +22,12 @@ const signToken = (id) => {
 const createSendToken = (user, statusCode, res, options) => {
   const token = signToken(user._id);
   const response = { status: 'success', token };
-  if (options && options.signup === 1) response.data = { user };
+  if (options && options.signup === 1) {
+    user.password = undefined;
+    response.data = { user };
+  }
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  res.cookie('jwt', token);
   res.status(statusCode).json(response);
 };
 
