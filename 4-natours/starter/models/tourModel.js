@@ -143,11 +143,6 @@ toursSchema.pre('save', function (next) {
   next();
 });
 
-// toursSchema.post('save', function (doc, next) {
-//   console.log(doc);
-//   next();
-// });
-
 //QUERY MIDDLEWARE
 
 toursSchema.pre(/^find/, function (next) {
@@ -183,3 +178,5 @@ toursSchema.pre('aggregate', function (next) {
 const Tour = mongoose.model('Tour', toursSchema);
 
 module.exports = Tour;
+
+// POST /tour/id/reviews
