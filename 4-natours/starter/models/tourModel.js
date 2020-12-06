@@ -132,6 +132,7 @@ toursSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
+// Virtual POPULATE
 toursSchema.virtual('reviews', {
   ref: 'Review',
   foreignField: 'tour',
