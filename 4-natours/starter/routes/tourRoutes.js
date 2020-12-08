@@ -5,24 +5,22 @@ const reviewRouter = require('./reviewRoutes');
 
 const router = express.Router();
 
-router.route('/stats-tour').get(tourController.getTourStats);
-
-router
-  .route('/top-5-cheap')
-  .get(tourController.aliasTopTours, tourController.getAllTours);
-
-router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
-
-// router
-//   .route('/:id/reviews')
-//   .post(
-//     authController.protect,
-//     authController.restrictTo('user'),
-//     reviewController.createReview
-//   )
-//   .get(authController.protect, reviewController.getReviewsOfTour);
-
 router.use('/:id/reviews', reviewRouter);
+
+router.get('/stats-tour', tourController.getTourStats);
+
+router.get(
+  '/top-5-cheap',
+  tourController.aliasTopTours,
+  tourController.getAllTours
+);
+
+router.get(
+  '/monthly-plan/:year',
+  authController.protect,
+  authController.restrictTo('admin', 'lead-guide', 'guide'),
+  tourController.getMonthlyPlan
+);
 
 router
   .route('/:id')
@@ -40,7 +38,11 @@ router
 
 router
   .route('/')
-  .get(authController.protect, tourController.getAllTours)
-  .post(tourController.addNewTour);
+  .get(tourController.getAllTours)
+  .post(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    tourController.addNewTour
+  );
 
 module.exports = router;

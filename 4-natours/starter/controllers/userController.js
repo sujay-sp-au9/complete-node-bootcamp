@@ -11,13 +11,9 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = factory.getDocuments(User);
-
-exports.createUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not implemented. Please use /signup',
-  });
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
 };
 
 exports.updateMe = catchAsync(async (req, res, next) => {
@@ -51,7 +47,6 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 });
 
 exports.getUser = factory.getDocument(User);
-
 exports.updateUser = factory.updateDocument(User);
-
 exports.deleteUser = factory.deleteDocument(User);
+exports.getAllUsers = factory.getDocuments(User);
