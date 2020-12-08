@@ -20,7 +20,12 @@ exports.updateTour = factory.updateDocument(Tour);
 exports.deleteTour = factory.deleteDocument(Tour);
 
 exports.updateRatingsAverage = catchAsync(async (req, res, next) => {
-  const id = req.body.tour ? req.body.tour : req.params.id;
+  const id = req.review.tour ? req.review.tour : req.body.tour;
+  let statusCode = 200;
+  if (req.reviewDelete) {
+    req.review = null;
+    statusCode = 204;
+  }
   const tour = await Tour.findById(id).populate('reviews');
   const len = tour.reviews.length;
   let total = 0;
@@ -29,7 +34,7 @@ exports.updateRatingsAverage = catchAsync(async (req, res, next) => {
   });
   tour.ratingsAverage = total / len;
   tour.save();
-  res.status(200).json({
+  res.status(statusCode).json({
     status: 'success',
     data: req.review,
   });

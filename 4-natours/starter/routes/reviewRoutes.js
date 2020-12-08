@@ -28,7 +28,8 @@ router
   .delete(
     authController.protect,
     authController.restrictTo('user', 'admin'),
-    reviewController.deleteReview
+    reviewController.deleteReview,
+    tourController.updateRatingsAverage
   );
 
 module.exports = router;
