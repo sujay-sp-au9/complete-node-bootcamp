@@ -13,7 +13,7 @@ router
     authController.restrictTo('user'),
     reviewController.setTourUserIds,
     reviewController.createReview,
-    tourController.updateRatingsAverage
+    tourController.updateRatings
   );
 
 router
@@ -23,13 +23,13 @@ router
     authController.protect,
     authController.restrictTo('user'),
     reviewController.updateReview,
-    tourController.updateRatingsAverage
+    tourController.updateRatings
   )
   .delete(
     authController.protect,
     authController.restrictTo('user', 'admin'),
     reviewController.deleteReview,
-    tourController.updateRatingsAverage
+    tourController.updateRatings
   );
 
 module.exports = router;

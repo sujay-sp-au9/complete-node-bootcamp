@@ -19,7 +19,7 @@ exports.updateTour = factory.updateDocument(Tour);
 
 exports.deleteTour = factory.deleteDocument(Tour);
 
-exports.updateRatingsAverage = catchAsync(async (req, res, next) => {
+exports.updateRatings = catchAsync(async (req, res, next) => {
   const id = req.review.tour ? req.review.tour : req.body.tour;
   let statusCode = 200;
   if (req.reviewDelete) {
@@ -32,6 +32,7 @@ exports.updateRatingsAverage = catchAsync(async (req, res, next) => {
   tour.reviews.forEach((review) => {
     total += review.rating;
   });
+  tour.ratingsQuantity = len;
   tour.ratingsAverage = total / len;
   tour.save();
   res.status(statusCode).json({
