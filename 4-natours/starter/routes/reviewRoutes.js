@@ -12,9 +12,9 @@ router
     authController.protect,
     authController.restrictTo('user'),
     reviewController.setTourUserIds,
-    reviewController.createReview
-  )
-  .patch(authController.protect, tourController.updateRatingsAverage);
+    reviewController.createReview,
+    tourController.updateRatingsAverage
+  );
 
 router
   .route('/:id')

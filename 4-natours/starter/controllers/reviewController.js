@@ -1,5 +1,6 @@
 const Review = require('../models/reviewModel');
 const factory = require('./handlerFactory');
+const catchAsync = require('../utils/catchAsync');
 
 exports.setTourFilter = (req, res, next) => {
   if (req.params.id) {
@@ -18,7 +19,11 @@ exports.setTourUserIds = (req, res, next) => {
   next();
 };
 
-exports.createReview = factory.createDocument(Review, { next: true });
+exports.createReview = catchAsync(async (req, res, next) => {
+  const doc = await Review.create(req.body);
+  req.review = doc;
+  next();
+});
 
 exports.updateReview = factory.updateDocument(Review);
 

@@ -31,7 +31,7 @@ exports.updateRatingsAverage = catchAsync(async (req, res, next) => {
   tour.save();
   res.status(200).json({
     status: 'success',
-    data: null,
+    data: req.review,
   });
 });
 
