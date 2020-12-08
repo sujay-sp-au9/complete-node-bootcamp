@@ -30,7 +30,6 @@ router
     authController.restrictTo('admin', 'lead-guide'),
     tourController.updateTour
   )
-  .put(tourController.updateRatingsAverage)
   .delete(
     authController.protect,
     authController.restrictTo('admin', 'leadguide'),
