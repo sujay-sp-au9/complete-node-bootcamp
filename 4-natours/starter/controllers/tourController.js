@@ -19,6 +19,22 @@ exports.updateTour = factory.updateDocument(Tour);
 
 exports.deleteTour = factory.deleteDocument(Tour);
 
+exports.updateRatingsAverage = catchAsync(async (req, res, next) => {
+  const id = req.body.tour ? req.body.tour : req.params.id;
+  const tour = await Tour.findById(id).populate('reviews');
+  const len = tour.reviews.length;
+  let total = 0;
+  tour.reviews.forEach((review) => {
+    total += review.rating;
+  });
+  tour.ratingsAverage = total / len;
+  tour.save();
+  res.status(200).json({
+    status: 'success',
+    data: null,
+  });
+});
+
 exports.getTourStats = catchAsync(async (req, res, next) => {
   const statsQuery = Tour.aggregate([
     {
