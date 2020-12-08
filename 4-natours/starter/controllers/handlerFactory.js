@@ -34,9 +34,11 @@ exports.getDocuments = (Model) =>
 exports.getDocument = (Model, pupulateOptions) =>
   catchAsync(async (req, res, next) => {
     const docQuery = Model.findById(req.params.id);
-    pupulateOptions.forEach((val) => {
-      docQuery.populate(val);
-    });
+    if (pupulateOptions) {
+      pupulateOptions.forEach((val) => {
+        docQuery.populate(val);
+      });
+    }
     const doc = await docQuery;
     if (!doc) {
       return next(new AppError('No document found with that ID', 404));
