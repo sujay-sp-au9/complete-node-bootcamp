@@ -55,7 +55,7 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
 
 exports.getDistances = catchAsync(async (req, res, next) => {
   const { latlng, unit } = req.params;
-  if (!unit || (unit != 'km' && unit != 'mi')) {
+  if (!unit || (unit !== 'km' && unit !== 'mi')) {
     return next(new AppError('Invalid unit', 400));
   }
   const [lat, lng] = latlng.split(',');
