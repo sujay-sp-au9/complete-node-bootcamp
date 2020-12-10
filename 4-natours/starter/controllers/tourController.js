@@ -23,14 +23,6 @@ exports.deleteTour = factory.deleteDocument(Tour);
 exports.getToursWithin = catchAsync(async (req, res, next) => {
   const { distance, latlong, unit } = req.params;
   const [lat, lng] = latlong.split(',');
-  let earthRadius = Infinity;
-  if (unit === 'km') {
-    earthRadius = 6378;
-  }
-  if (unit === 'mi') {
-    earthRadius = 3958.8;
-  }
-  const radius = distance / earthRadius;
   if (!lat || !lng) {
     return next(
       new AppError(
@@ -39,15 +31,65 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
       )
     );
   }
-
+  let earthRadius;
+  if (unit === 'km') {
+    earthRadius = 6378;
+  } else if (unit === 'mi') {
+    earthRadius = 3958.8;
+  } else {
+    return next(new AppError('Invalid unit', 400));
+  }
+  const radius = distance / earthRadius;
   const tours = await Tour.find({
     startLocation: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
   });
 
   res.status(200).json({
     status: 'success',
+    results: tours.length,
     data: {
       tours,
+    },
+  });
+});
+
+exports.getDistances = catchAsync(async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  if (!unit || (unit != 'km' && unit != 'mi')) {
+    return next(new AppError('Invalid unit', 400));
+  }
+  const [lat, lng] = latlng.split(',');
+  if (!lat || !lng) {
+    return next(
+      new AppError(
+        'Please provide latitude and longitude in the format lat,lng',
+        400
+      )
+    );
+  }
+  const distances = await Tour.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [lng * 1, lat * 1],
+        },
+        distanceField: 'distance',
+        distanceMultiplier: unit === 'mi' ? 0.000621371 : 0.001,
+      },
+    },
+    {
+      $project: {
+        distance: 1,
+        name: 1,
+      },
+    },
+  ]);
+  res.status(200).json({
+    status: 'success',
+    result: distances.length,
+    data: {
+      distances,
     },
   });
 });
