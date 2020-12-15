@@ -9,14 +9,6 @@
     "password": "$2a$12$Q0grHjH9PXc6SxivC8m12.2mZJ9BbKcgFpwSG4Y1ZEII8HJVzWeyS"
   },
   {
-    "_id": "5fd8beac8ee8d51e1d55ea29",
-    "role": "admin",
-    "active": true,
-    "name": "MicForPc",
-    "email": "mic.forpc1995@gmail.com",
-    "password": "$2a$12$.SWo7OlwUyIZdtqcEjJ.pe82AAWxGCIaR572d/zQRyhiBKZNyKYnu"
-  },
-  {
     "_id": "5c8a1dfa2f8fb814b56fa181",
     "name": "Lourdes Browning",
     "email": "loulou@example.com",

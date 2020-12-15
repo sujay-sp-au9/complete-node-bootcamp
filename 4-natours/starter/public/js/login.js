@@ -11,9 +11,10 @@ const login = async (email, password) => {
       },
       withCredentials: true,
     });
+    localStorage.setItem('jwt', res.data.token);
     console.log(res);
   } catch (err) {
-    console.log(err);
+    console.log(err.response.data);
   }
 };
 
