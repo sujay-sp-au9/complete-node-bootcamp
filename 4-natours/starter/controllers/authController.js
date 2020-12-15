@@ -49,7 +49,6 @@ exports.login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({
     email,
   }).select('+password');
-  console.log(user);
   if (!user || !(await user.correctPassword(password, user.password)))
     return next(new AppError('User not found', 401));
   createSendToken(user, 200, res);
