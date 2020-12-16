@@ -1,4 +1,6 @@
-/* eslint-disable no-undef */
+/* eslint-disable */
+
+import { showAlert } from './alerts.js';
 
 const login = async (email, password) => {
   try {
@@ -11,10 +13,13 @@ const login = async (email, password) => {
       },
       withCredentials: true,
     });
+    if (res.data.status === 'success') {
+      showAlert('success', 'Logged in successfully');
+      window.setTimeout(() => window.location.assign('/'), 1500);
+    }
     localStorage.setItem('jwt', res.data.token);
-    console.log(res);
   } catch (err) {
-    console.log(err.response.data);
+    showAlert('error', err.response.data.message);
   }
 };
 
