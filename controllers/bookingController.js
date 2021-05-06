@@ -6,6 +6,7 @@ const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
 const createBookingCheckout = catchAsync(async (session) => {
+  console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
   const tour = session.client_reference_id;
   const user = (await User.findOne({ email: session.customer_email }))._id;
   const price = session.display_items.amount / 100;
@@ -54,7 +55,9 @@ exports.webhookCheckout = (req, res, next) => {
   } catch (err) {
     return res.status(400).send(`Webhook-error: ${err.message}`);
   }
+  console.log(stripeEvent);
   if (stripeEvent.type === 'checkout.session.completed') {
+    console.log('yaaaaaaaaaaaaaaaaaaaaaaaaaaay');
     createBookingCheckout(stripeEvent.data.object);
   }
   res.status(200).json({ received: true });
