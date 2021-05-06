@@ -4,14 +4,16 @@
   "description": "learning node express and mongo",
   "main": "app.js",
   "scripts": {
-    "start:dev": "node server.js",
+    "start:dev": "nodemon server.js",
     "start:prod": "NODE_ENV=production node server.js",
-    "debug": "ndb server.js"
+    "debug": "ndb server.js",
+    "build:js": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
   },
   "author": "sujay",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -20,13 +22,18 @@
     "express-rate-limit": "^5.2.3",
     "helmet": "^4.2.0",
     "hpp": "^0.2.3",
+    "html-to-text": "^7.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.15",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "ndb": "^1.1.5",
     "nodemailer": "^6.4.16",
+    "parcel-bundler": "^1.12.5",
     "pug": "^3.0.0",
+    "sharp": "^0.27.1",
     "slugify": "^1.4.6",
+    "stripe": "^8.145.0",
     "validator": "^13.1.17",
     "xss-clean": "^0.1.1"
   },

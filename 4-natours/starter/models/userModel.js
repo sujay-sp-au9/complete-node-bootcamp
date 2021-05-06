@@ -15,7 +15,10 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, 'Please enter a valid email'],
   },
-  photo: String,
+  photo: {
+    type: String,
+    default: 'default.jpeg',
+  },
   password: {
     type: String,
     required: [true, 'Please enter a password'],
@@ -69,11 +72,7 @@ userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
 ) {
-  try {
-    return await bcrypt.compare(candidatePassword, userPassword);
-  } catch (err) {
-    console.log(err);
-  }
+  return await bcrypt.compare(candidatePassword, userPassword);
 };
 
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
