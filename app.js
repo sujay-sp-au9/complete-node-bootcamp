@@ -27,6 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors({ origin: true, credentials: true }));
 
+app.options('*', cors({ origin: true, credentials: true }));
+
 app.use(helmet());
 
 app.use(
